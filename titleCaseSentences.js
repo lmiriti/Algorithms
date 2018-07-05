@@ -1,3 +1,4 @@
+//This algorithm upper-cases the first letter of each word of any phrase you fed into it.
 
 function titleCase(str) {
 	var array = str.toLowerCase().split(' '); //to put everything in lower-case then split it into an array.

@@ -1,3 +1,4 @@
+//This algorithm returns the count of the longest word in any pharse fed into it.
 
 var globalCount = 0;
 
@@ -10,14 +11,8 @@ function longestWord(str) {
 			globalCount = array[i].length;
 		};
 	}
-	
-	
-	
 }
 
-
 var string = longestWord("The quick brown fox jumpedaaaaaaa over the lazy dog");
-
-
 
 console.log(globalCount);

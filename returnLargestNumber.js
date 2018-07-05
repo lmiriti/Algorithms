@@ -1,3 +1,7 @@
+//This algorithms return an array with the largest numbers in each array fed into it.
+
+
+
 
 //Basic algorithm solution
 function largestNumber(arr) {
@@ -17,10 +21,12 @@ function largestNumber(arr) {
 	return result;
 }
 
-
 var arrayList = largestNumber([[4, 5, 1, 3], [13, 27, 18, 26], [32, 35, 37, 39], [1000, 1001, 857, 1]]);
 
 console.log(arrayList);
+
+
+
 
 //Intermediate algorithm solution
 function largestOfFou(arr) {
@@ -34,6 +40,9 @@ function largestOfFou(arr) {
 var ans = largestOfFou([[4, 5, 1, 3], [13, 27, 18, 26], [32, 35, 37, 39], [1000, 1001, 857, 1]]);
 console.log(ans);
 
+
+
+
 //advanced algorithm solution
 function largestOfFour(arr) {
 	  return arr.map(Function.apply.bind(Math.max, null));
@@ -41,6 +50,8 @@ function largestOfFour(arr) {
 
 var answer = largestOfFour([[4, 5, 1, 3], [13, 27, 18, 26], [32, 35, 37, 39], [1000, 1001, 857, 1]]);
 console.log(answer);
+
+
 
 
 //My algorithm solution
