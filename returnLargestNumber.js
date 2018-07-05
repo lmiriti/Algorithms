@@ -1,4 +1,4 @@
-//This algorithms return an array with the largest numbers in each array fed into it.
+//This algorithm returns an array with the largest number in each array fed into it.
 
 
 
