@@ -13,6 +13,6 @@ function longestWord(str) {
 	}
 }
 
-var string = longestWord("The quick brown fox jumpedaaaaaaa over the lazy dog");
+var string = longestWord("The quick brown fox jumped over the lazy dog ");
 
 console.log(globalCount);
