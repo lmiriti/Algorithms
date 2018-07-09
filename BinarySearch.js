@@ -6,7 +6,6 @@ var doSearch = function(array, targetValue) {
     var guess;
     if (max < min) {
 	return -1;}
-
 	while (max >= min) {
 	  guess = Math.floor((max + min)/2);  
 	  if (array[guess] === targetValue) {
