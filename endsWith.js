@@ -7,6 +7,7 @@ function endsWith(str, target) {
     		}
     		else {
     		console.log(false);
+    		
     		}
     }
 	else {
