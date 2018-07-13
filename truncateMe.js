@@ -1,6 +1,35 @@
-//This algorithm is still being edited. ****
-var str = "The morning is upon us.";
+//This algorithm truncates a string. 
 
-var str1 = str.slice(-3);
 
-console.log(str1);
+//Basic code solution
+function truncateString(str, num) {
+	
+    if (str.length > num && num > 3) {
+    	return str.slice(0, (num - 3)) + "...";
+    }
+    else if (str.length > num && num <= 3) {
+    	return str.slice(0, num) + "...";
+    }
+    else {
+    	return str;
+    }
+	
+}
+
+var result = truncateString("A-tisket a-tasket A green and yellow basket", 11);
+
+console.log(result);
+
+//Advanced code solution
+function truncateStrings(str, num) {
+	if (str.length > num) {
+		return str.slice(0, num > 3 ? (num - 3) : num) + "...";
+	}
+	else {
+		return str;
+	}
+	
+	}
+
+	var result2 = truncateStrings("A-tisket a-tasket A green and yellow basket", 11);
+	console.log(result2);
