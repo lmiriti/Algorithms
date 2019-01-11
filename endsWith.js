@@ -14,5 +14,5 @@ function endsWith(str, target) {
     	console.log("Feed me an input bitch!");
     }	
 }
-var ans = endsWith("im not sure", "not sure");
+var ans = endsWith("im not sure", ".");
 
