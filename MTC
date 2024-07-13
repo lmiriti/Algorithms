@@ -1,0 +1,119 @@
+import boto3
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error
+
+# Initialize AWS S3 client
+s3 = boto3.client('s3')
+
+# Constants for S3 bucket
+BUCKET_NAME = 'your-bucket-name'
+HISTORICAL_DATA_FILE = 'historical_data.csv'
+ROUTE_DATA_FILE = 'route_data.csv'
+
+# Upload a file to S3
+def upload_file_to_s3(file_name, bucket, object_name=None):
+    if object_name is None:
+        object_name = file_name
+    try:
+        s3.upload_file(file_name, bucket, object_name)
+        print(f'File {file_name} uploaded to {bucket}/{object_name}')
+    except Exception as e:
+        print(f'Error uploading file: {e}')
+
+# Download a file from S3
+def download_file_from_s3(bucket, object_name, file_name):
+    try:
+        s3.download_file(bucket, object_name, file_name)
+        print(f'File {object_name} downloaded from {bucket} to {file_name}')
+    except Exception as e:
+        print(f'Error downloading file: {e}')
+
+# Step 1: Data Preparation
+def prepare_data():
+    # Download historical data from S3
+    download_file_from_s3(BUCKET_NAME, HISTORICAL_DATA_FILE, 'local_historical_data.csv')
+    data = pd.read_csv('local_historical_data.csv')
+    
+    # Feature engineering example
+    data['weekday'] = data['shipment_date'].apply(lambda x: pd.to_datetime(x).weekday())
+    # Add more feature engineering as needed
+    
+    return data
+
+# Step 2: Model Training
+def train_models(data):
+    # Split data into training and test sets
+    X = data.drop(['transit_time', 'cost'], axis=1)
+    y_time = data['transit_time']
+    y_cost = data['cost']
+    
+    X_train, X_test, y_time_train, y_time_test, y_cost_train, y_cost_test = train_test_split(X, y_time, y_cost, test_size=0.2, random_state=42)
+    
+    # Train models
+    time_model = RandomForestRegressor(n_estimators=100, random_state=42)
+    time_model.fit(X_train, y_time_train)
+    
+    cost_model = LinearRegression()
+    cost_model.fit(X_train, y_cost_train)
+    
+    # Validate models
+    y_time_pred = time_model.predict(X_test)
+    y_cost_pred = cost_model.predict(X_test)
+    
+    print('Time Model MAE:', mean_absolute_error(y_time_test, y_time_pred))
+    print('Cost Model MAE:', mean_absolute_error(y_cost_test, y_cost_pred))
+    
+    return time_model, cost_model
+
+# Step 3: Prediction Integration
+def predict(route_data, time_model, cost_model):
+    X_new = pd.DataFrame(route_data)
+    predicted_time = time_model.predict(X_new)
+    predicted_cost = cost_model.predict(X_new)
+    
+    return predicted_time, predicted_cost
+
+# Example Function to Fetch Routes
+def fetch_routes(origin, destination, shipment_date):
+    # Dummy function to fetch routes (Replace with actual implementation)
+    # Here, we just return a list of dictionaries with dummy route data
+    return [{'origin': origin, 'destination': destination, 'shipment_date': shipment_date, 'other_features': 'value'}]
+
+# Calculate Reliability (Dummy Implementation)
+def calculate_reliability(route):
+    # Dummy function to calculate reliability (Replace with actual implementation)
+    return np.random.rand()
+
+# Main Function
+def get_shipping_recommendations(origin, destination, shipment_date, preferences):
+    # Fetch and prepare data
+    historical_data = prepare_data()
+    time_model, cost_model = train_models(historical_data)
+    
+    # Fetch real-time data for current routes
+    routes = fetch_routes(origin, destination, shipment_date)
+    scored_routes = []
+    
+    for route in routes:
+        route_data = prepare_route_data(route)
+        predicted_time, predicted_cost = predict(route_data, time_model, cost_model)
+        reliability = calculate_reliability(route)
+        
+        score = (preferences['cost'] * predicted_cost) + (preferences['speed'] * predicted_time) + (preferences['reliability'] * reliability)
+        scored_routes.append((route, score, predicted_time, predicted_cost, reliability))
+    
+    sorted_routes = sorted(scored_routes, key=lambda x: x[1])
+    return sorted_routes[:3]  # Top 3 recommendations
+
+def prepare_route_data(route):
+    # Dummy function to prepare route data for prediction (Replace with actual implementation)
+    return {'origin': route['origin'], 'destination': route['destination'], 'shipment_date': route['shipment_date'], 'other_features': 'value'}
+
+# Example Usage
+preferences = {'cost': 0.4, 'speed': 0.4, 'reliability': 0.2}
+recommendations = get_shipping_recommendations('Italy', 'Kenya', '2024-08-01', preferences)
+print(recommendations)
